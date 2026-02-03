@@ -49,7 +49,7 @@ sentry = { workspace = true }
 
 # Server
 axum = { version = "0.7.5", features = ["ws"] }
-tokio = { version = "1.15", features = ["full", "tracing"] }
+tokio = { version = "1.42", features = ["full", "tracing"] }
 tower-http = { version = "0.5.2", features = ["cors", "trace"] }
 
 # Log
@@ -113,7 +113,7 @@ walkdir = "2.3.4"
 
 regex = "1.10.0"
 
-lru = "0.13.0"
+lru = "0.16.3"
 tokio-util = { version = "0.7", features = ["io"] }
 
 once_cell = { workspace = true }
