@@ -32,7 +32,7 @@ tauri-plugin-dialog = "=2.0.0"
 tauri-plugin-os = "=2.0.0"
 tauri-plugin-process = "=2.0.0"
 tauri-plugin-autostart = "=2.0.0"
-tauri-plugin-shell = "=2.0.0"
+tauri-plugin-shell = "=2.2.1"
 tauri-plugin-store = "=2.2.0"
 tauri-plugin-http = "2"
 
@@ -50,14 +50,14 @@ log = "0.4.17"
 dark-light = "2.0.0"
 
 # Tokio
-tokio = { version = "1.36.0", features = ["full"] }
+tokio = { version = "1.38.2", features = ["full"] }
 
 # HTTP client
 reqwest = { version = "=0.12.12", features = ["blocking", "multipart", "json"] }
 
 # tracing
 tracing = "0.1.40"
-tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
+tracing-subscriber = { version = "0.3.20", features = ["env-filter"] }
 tracing-appender = "0.2.3"
 
 
