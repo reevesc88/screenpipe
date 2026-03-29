@@ -23,7 +23,7 @@
     "lodash": "^4.17.21",
     "lucide-react": "^0.468.0",
     "next": "14.2.15",
-    "nodemailer": "^6.9.16",
+    "nodemailer": "^8.0.4",
     "openai": "^4.76.3",
     "react": "^18",
     "react-dom": "^18",
