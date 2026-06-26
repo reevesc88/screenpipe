@@ -1,0 +1,16 @@
+language: "en-US"
+tone_instructions: "Be concise. Flag memory safety, privacy data handling issues, and OS compatibility gaps. Skip style nitpicks."
+reviews:
+  profile: "chill"
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches: ["main"]
+  path_filters:
+    - "!*.lock"
+    - "!node_modules/**"
+    - "!dist/**"
+    - "!build/**"
+    - "!target/**"
+chat:
+  auto_reply: true
