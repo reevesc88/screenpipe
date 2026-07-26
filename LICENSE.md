@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2024-2025 louis030195
+Copyright (c) 2024-2026 louis030195
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,9 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+The above MIT license applies to all code in this repository, with the
+exception of code contained in the `ee/` directory, which is licensed under
+the Screenpipe Enterprise License. See [ee/LICENSE](ee/LICENSE) for details.
