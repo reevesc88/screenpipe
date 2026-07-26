@@ -1,6 +1,6 @@
 # contributing to screen pipe
 
-first off, thank you for considering contributing to screen pipe! it's people like you that make screen pipe such a great tool. we're looking for developers who want to create paid pipes, with the potential to easily make $1000/m. let's [schedule a call](https://cal.com/louis030195/screenpipe) to get you onboarded.
+first off, thank you for considering contributing to screen pipe!
 
 btw, we prefer that you don't contribute if you are not using or will use the product and is just there for bounties, thank you.
 
@@ -17,7 +17,7 @@ before you begin:
 1. **install dependencies**:
    ```bash
    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-   brew install pkg-config ffmpeg jq cmake wget git-ls
+   brew install pkg-config ffmpeg jq cmake wget git-lfs
    ```
    Install Xcode via App Store (or elsewhere) and initialize. Xcode command line tools only installation is insufficent. 
    ```
@@ -32,13 +32,13 @@ before you begin:
 
 3. **clone the repository**:
    ```bash
-   git clone https://github.com/mediar-ai/screenpipe
+   git clone https://github.com/screenpipe/screenpipe
    cd screenpipe
    ```
 
 4. **build the project**:
    ```bash
-   cargo build --release --features metal
+   cargo build --release --features metal,apple-intelligence
    ```
 
 5. **run screenpipe**:
@@ -48,9 +48,9 @@ before you begin:
 
 6. **build the desktop app**:
    ```bash
-   cd screenpipe-app-tauri
+   cd apps/screenpipe-app-tauri
    bun install
-   bun tauri build
+   bun tauri build --features metal,apple-intelligence
    ```
 
 ### windows
@@ -71,91 +71,22 @@ before you begin:
    irm https://bun.sh/install.ps1 | iex
    ```
 
-3. **clone and setup vcpkg**:
+3. **set environment variables**:
    ```powershell
-   cd C:\dev
-   $env:DEV_DIR = $(pwd)
-   git clone https://github.com/microsoft/vcpkg.git
-   cd vcpkg
-   ./bootstrap-vcpkg.bat -disableMetrics
-   ./vcpkg.exe integrate install --disable-metrics
-   ./vcpkg.exe install ffmpeg:x64-windows
-   ```
-
-4. **set environment variables**:
-   ```powershell
-   [System.Environment]::SetEnvironmentVariable('PKG_CONFIG_PATH', "$env:DEV_DIR\vcpkg\packages\ffmpeg_x64-windows\lib\pkgconfig", 'User')
-   [System.Environment]::SetEnvironmentVariable('VCPKG_ROOT', "$env:DEV_DIR\vcpkg", 'User')
    [System.Environment]::SetEnvironmentVariable('LIBCLANG_PATH', 'C:\Program Files\LLVM\bin', 'User')
    [System.Environment]::SetEnvironmentVariable('PATH', "$([System.Environment]::GetEnvironmentVariable('PATH', 'User'));C:\Program Files (x86)\GnuWin32\bin", 'User')
    ```
-5. **clone the project**:
+
+4. **clone the project**:
    ```powershell
-      git clone https://github.com/mediar-ai/screenpipe.git
+      git clone https://github.com/screenpipe/screenpipe.git
       cd screenpipe
    ```
-6. **setup Intel OpenMP DLLs**:
-   - make sure your in root of the project i.e screenpipe
-   - Ensure Python and `pip` are installed before running the script.
-   
-   ```powershell
-   cd screenpipe
-   # Define the target directory where Intel OpenMP DLLs will be copied 
-   $mkl_dir = (pwd).Path + "\screenpipe-app-tauri\src-tauri\mkl"
-   New-Item -ItemType Directory -Force -Path $mkl_dir | Out-Null
-
-   python -m pip install --upgrade pip
-   $temp_dir = "temp_omp"
-   New-Item -ItemType Directory -Force -Path $temp_dir | Out-Null
-
-   Write-Host "Installing Intel OpenMP..."
-   python -m pip install intel-openmp --target $temp_dir
-
-   Write-Host "Copying DLL files..."
-   Get-ChildItem -Path $temp_dir -Recurse -Filter "*.dll" | ForEach-Object {
-       Write-Host "Copying $_"
-       Copy-Item $_.FullName -Destination $mkl_dir -Force
-   }
-   # Clean up the temporary directory
-   Remove-Item -Path $temp_dir -Recurse -Force
-   ```
-7. **make sure vcredist is present on system**:
-   - make sure your in root of the project i.e screenpipe
-
-   ```powershell
-   cd screenpipe
-   $path = "C:\Windows\System32\vcruntime140.dll"
-   
-   if (-Not (Test-Path $path)) {
-       Start-Process powershell -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -Command "& {
-           Set-ExecutionPolicy Bypass -Scope Process -Force
-           [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-           $url = ''https://vcredist.com/install.ps1''
-           $scriptPath = ''$env:TEMP\install_vcredist.ps1''
-           Invoke-WebRequest -Uri $url -OutFile $scriptPath
-           & $scriptPath
-       }"' -Wait
-   }
-   
-   # Verify installation
-   if (-Not (Test-Path $path)) {
-       Write-Host "Installation failed. Exiting."
-       exit 1
-   }
-   
-   # Copy vcruntime140.dll to the specified directory
-   $vcredist_dir = (pwd).Path + "\screenpipe-app-tauri\src-tauri\vcredist"
-   New-Item -ItemType Directory -Force -Path $vcredist_dir | Out-Null
-   Copy-Item $path -Destination $vcredist_dir -Force
-   
-   Write-Host "vcruntime140.dll copied successfully!"
-   ```
-
-8. **build**:
+5. **build**:
    ```powershell
    cd screenpipe
    cargo build --release
-   cd screenpipe-app-tauri
+   cd apps/screenpipe-app-tauri
    bun install
    bun tauri build
    ```
@@ -164,8 +95,9 @@ before you begin:
 
 1. **install dependencies**:
    ```bash
-   sudo apt-get install -y g++ ffmpeg tesseract-ocr cmake libavformat-dev libavfilter-dev libavdevice-dev libssl-dev libtesseract-dev libxdo-dev libsdl2-dev libclang-dev libxtst-dev
+   sudo apt-get install -y g++ ffmpeg tesseract-ocr cmake libavformat-dev libavfilter-dev libavdevice-dev libssl-dev libtesseract-dev libxdo-dev libsdl2-dev libclang-dev libxtst-dev libpipewire-0.3-dev
    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+   source ~/.bashrc
    ```
 
 2. **install bun cli**:
@@ -173,21 +105,27 @@ before you begin:
    curl -fsSL https://bun.sh/install | bash
    ```
 
-3. **clone and build**:
+3. **install vulkan dependencies (optional, for AMD GPU acceleration)**:
    ```bash
-   git clone https://github.com/mediar-ai/screenpipe
+   sudo apt-get install -y libvulkan-dev glslc
+   ```
+
+4. **clone and build**:
+   ```bash
+   git clone https://github.com/screenpipe/screenpipe
    cd screenpipe
    cargo build --release
    ```
 
-4. **run the application**:
+5. **run the application**:
    ```bash
    ./target/release/screenpipe
    ```
 
-5. **build the desktop app**:
+6. **build the desktop app**:
    ```bash
-   cd screenpipe-app-tauri
+   sudo apt-get install -y libayatana-appindicator3-1 libayatana-appindicator3-dev librsvg2-dev libwebkit2gtk-4.1-dev
+   cd apps/screenpipe-app-tauri
    bun install
    bun tauri build
    ```
@@ -224,10 +162,6 @@ this section guides you through submitting an enhancement suggestion for screen 
 
 ## styleguides
 
-### use cursor rules
-
-check [.cursorrules](.cursorrules) for more details, see any instructions we could add / remove? send a PR to update this file.
-
 ### git commit messages
 
 - use the present tense ("add feature" not "added feature")
@@ -244,22 +178,15 @@ we follow [this](https://doc.rust-lang.org/cargo/guide/project-layout.html) fold
 
 ## additional notes
 
-### try to keep files small (under 600 lines of code)
-
-AI is quite bad when files are big, we should try to keep small so we move faster (also it's nice for humans too 🤓)
-
-**expand & distill**: iterate fast on long files, then split them up
-
 ### principles 
 
 - **user fanatic: focus on building what people want and bring maximum value.**
 - concurrency: channels > mutexes/locks
 - simplicity: avoid premature optimization. write code that is easy for humans to read, fast for machines to execute. less is more. optimise for less code, less files, less dependencies, less complexity.
-- production: we're building real products, not python toy that grow to 150k stars and die prematurely and never leave localhost, thank you.
+- production: we're building real products
 - focus: avoid feature creep. focus on the core functionality and build upon it. focus on the user and their needs.
 - use numbers: if you can't measure it, you can't improve it.
-- avoid oop: prefer functional programming.
-- positive-sum: we're all going to win, it is a multiplayer, positive sum game. (that escalated quickly)
+- positive-sum
 
 ### issue and pull request labels
 
@@ -269,12 +196,6 @@ this section lists the labels we use to help us track and manage issues and pull
 * `enhancement` - issues that are feature requests.
 * `documentation` - issues or pull requests related to documentation.
 * `good first issue` - good for newcomers.
-
-## building
-
-```bash
-cargo build --release --features metal # or cuda, depending on your computer's NPU
-```
 
 ## running tests
 
@@ -330,7 +251,7 @@ RUSTFLAGS="-Z sanitizer=address" cargo run --bin screenpipe
 RUSTFLAGS="-Z sanitizer=leak" cargo run --bin screenpipe
 ```
 
-for performance monitoring, you can use the following command:
+for leak tracking, you can use the following command:
 
 ```bash
 cargo install cargo-instruments
@@ -340,13 +261,71 @@ cargo instruments -t Leaks --bin screenpipe --features metal --time-limit 600000
 
 then open the file in `target/release/instruments` using xcode -> open developer tool -> instruments.
 
+### profiling cpu
+
+to investigate "where is screenpipe burning cpu", capture a sampling profile + a cpu/mem time series against the running process. recipes below produce comparable output on macos and windows.
+
+**macos** (built-in, no install):
+
+```bash
+PID=$(pgrep -x screenpipe-app || pgrep -x screenpipe | head -1)
+
+# 1) cpu/mem time series — 10s interval for 10min
+( echo "ts,pcpu,pmem,rss_mb"
+  for i in $(seq 1 60); do
+    read pcpu pmem rss < <(ps -p $PID -o pcpu=,pmem=,rss=)
+    echo "$(date +%H:%M:%S),$pcpu,$pmem,$((rss/1024))"
+    sleep 10
+  done ) > /tmp/sp-cpu.csv
+
+# 2) sampling profile — 10min @ 1ms (call-tree, symbolicated)
+sample $PID 600 -file /tmp/sp-sample.txt
+```
+
+aggregate hot leaf functions:
+
+```bash
+awk '/Call graph/,/Binary Images/' /tmp/sp-sample.txt \
+  | grep '(in ' | sed -E 's/^[[:space:]+!|:]*//; s/  \(in .*$//' \
+  | grep -E "^[0-9]+ (screenpipe|AXUIElement|cidre|onnxruntime|sqlite)" \
+  | awk '{n=$1+0; $1=""; sub(/^ +/,"",$0); if(n>mx[$0])mx[$0]=n}
+         END{for(k in mx) printf "%8d  %s\n", mx[k], k}' \
+  | sort -rn | head -30
+```
+
+**windows** (samply, install once: `cargo install samply`):
+
+```powershell
+$sp = (Get-Process screenpipe-app,screenpipe -ErrorAction SilentlyContinue |
+       Sort-Object WorkingSet64 -Descending | Select-Object -First 1).Id
+
+# 1) cpu/mem time series — 10s interval for 10min
+"ts,pcpu,ws_mb,priv_mb" | Out-File $env:TEMP\sp-cpu.csv
+1..60 | ForEach-Object {
+  $p1=Get-Process -Id $sp; $c1=$p1.TotalProcessorTime.TotalSeconds
+  Start-Sleep 1
+  $p2=Get-Process -Id $sp; $c2=$p2.TotalProcessorTime.TotalSeconds
+  $pcpu=[math]::Round(($c2-$c1)*100,1)
+  "$(Get-Date -Format HH:mm:ss),$pcpu,$([math]::Round($p2.WorkingSet64/1MB)),$([math]::Round($p2.PrivateMemorySize64/1MB))" |
+    Add-Content $env:TEMP\sp-cpu.csv
+  Start-Sleep 9
+}
+
+# 2) sampling profile — 10min, view at https://profiler.firefox.com
+samply record --save-only -o $env:TEMP\sp.json.gz --duration 600 --pid $sp
+```
+
+fallback if samply unavailable: `wpr -start CPU -filemode; Start-Sleep 600; wpr -stop /tmp/sp.etl` and open the etl in [wpa](https://learn.microsoft.com/windows-hardware/test/wpt/windows-performance-analyzer) or perfview.
+
+share both files (`sp-cpu.csv` + `sp-sample.txt` / `sp.json.gz`) in the issue when reporting cpu regressions.
+
 ### benchmarks
 
 ```
 cargo bench
 ```
 
-[check benchmark visuals](https://mediar-ai.github.io/screenpipe/dev/bench/)
+[check benchmark visuals](https://screenpipe.github.io/screenpipe/dev/bench/)
 
 ### creating new migrations
 
@@ -456,7 +435,7 @@ we use this for our docs through mintlify, usually the output is broken and i us
 
 ```
 please run this command:
-npx @mintlify/scraping@latest openapi-file content/docs-mintlify-mig-tmp/openapi.yaml -o /tmp
+npx @mintlify/scraping@latest openapi-file docs/mintlify/openapi.yaml -o /tmp
 and fix the openapi.yaml file and rerun the command until it works
 ```
 
@@ -471,41 +450,18 @@ get rid of semantic search bcs not prod rdy also
 
 make sure to run 
 
-`npx @mintlify/scraping@latest openapi-file content/docs-mintlify-mig-tmp/openapi.yaml -o /tmp`
+`npx @mintlify/scraping@latest openapi-file docs/mintlify/openapi.yaml -o /tmp`
 
 to validate the openapi.yaml file is valid btw before pushing 
 
 ## join the community
 
-say 👋 in our [public discord channel](https://discord.gg/dU9EBuw7Uq). we discuss how to bring this lib to production, help each other with contributions, personal projects or just hang out ☕.
+say 👋 in our [public discord channel](https://discord.gg/screenpipe). we discuss how to bring this lib to production, help each other with contributions, personal projects or just hang out ☕.
 
 thank you for contributing to screen pipe! 🎉
 
-## paid testing
+## testing
 
-screenpipe has an automated release testing program to ensure quality across different platforms:
-
-### how it works
-
-- regular `release-app` commits automatically setup testing bounties
-- `release-app-publish` commits skip testing by default and ship to prod immediately
-- you can explicitly control testing with these flags:
-  - `release-app-skip-test`: skip testing even for regular builds
-
-### when testing is needed
-
-consider requesting testing when:
-
-- making significant ui changes
-- changing core recording functionality
-- updating dependencies that affect major features
-- fixing critical bugs that need verification
-
-### testing workflow
-
-1. make your changes and commit with the appropriate flag
-2. github actions will automatically setup testing if needed
-3. community testers will receive bounties for testing
-4. review test reports for issues before final release
+testing is one of the toughtest challenge, we love any help improving the testing pipeline before going into production
 
 see [TESTING.md](TESTING.md) for more details on the testing process.
