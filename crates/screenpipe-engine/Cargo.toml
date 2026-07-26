@@ -80,7 +80,7 @@ futures = { version = "0.3.31", features = ["std"] }
 dirs = "5.0"
 
 # Password input (no-echo for vault CLI)
-rpassword = "5"
+rpassword = "7"
 
 # Client http
 reqwest = { workspace = true }
