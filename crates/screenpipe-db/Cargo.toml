@@ -29,7 +29,7 @@ tokio = { version = "1.42", features = ["full", "tracing"] }
 
 tracing = { workspace = true }
 anyhow = "1.0.86"
-rand = "0.8.5"
+rand = "0.10.1"
 criterion = { workspace = true }
 oasgen = { workspace = true }
 tracing-subscriber = { workspace = true }
