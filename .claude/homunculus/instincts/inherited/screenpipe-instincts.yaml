@@ -1,56 +1,33 @@
-# Instincts generated from https://github.com/reevesc88/screenpipe
-# Generated: 2026-08-31T15:16:16.007Z
+# Instincts aligned to CLAUDE.md, CONTRIBUTING.md, and the current tree.
+# Replaces the 2026-08-31 repo-analysis pass (one commit, PascalCase, relative imports).
 # Version: 2.0
-# NOTE: This file supplements (does not replace) any existing curated instincts.
-# High-confidence manually curated instincts should be preserved alongside these.
 
 ---
-id: screenpipe-commit-conventional
+id: screenpipe-commit-message
 trigger: "when writing a commit message"
-confidence: 0.85
+confidence: 0.95
 domain: git
-source: repo-analysis
+source: CONTRIBUTING.md
 source_repo: https://github.com/reevesc88/screenpipe
 ---
 
-# Screenpipe Commit Conventional
+# Screenpipe Commit Message
 
 ## Action
 
-Use conventional commit format with prefixes: chore
+Write an imperative, present-tense subject of at most 72 characters. Commit text feeds the changelog, so the subject must say what changed. Do not restrict prefixes to `chore`, and do not require `feat:` or `fix:` conventional-commit prefixes.
 
 ## Evidence
 
-- 1 commits analyzed
-- Detected conventional commit pattern
-- Examples: chore(deps): bump the cargo group across 5 directories with 11 updates
-
----
-id: screenpipe-commit-length
-trigger: "when writing a commit message"
-confidence: 0.6
-domain: git
-source: repo-analysis
-source_repo: https://github.com/reevesc88/screenpipe
----
-
-# Screenpipe Commit Length
-
-## Action
-
-Write moderate-length commit messages (~70 characters)
-
-## Evidence
-
-- Average commit message length: 70 chars
-- Based on 1 commits
+- CONTRIBUTING.md styleguide: present tense, imperative mood, 72-character first line
+- Changelog is generated from commit history
 
 ---
 id: screenpipe-naming-files
 trigger: "when creating a new file"
-confidence: 0.8
+confidence: 0.9
 domain: code-style
-source: repo-analysis
+source: repo-tree
 source_repo: https://github.com/reevesc88/screenpipe
 ---
 
@@ -58,70 +35,70 @@ source_repo: https://github.com/reevesc88/screenpipe
 
 ## Action
 
-Use PascalCase naming convention
+Name TypeScript files in kebab-case (`components/ui/button.tsx`, `license-key-input.tsx`). Name Rust modules in snake_case (`meeting_watcher.rs`). Do not use PascalCase file names.
 
 ## Evidence
 
-- Analyzed file naming patterns in repository
-- Dominant pattern: PascalCase
+- TS/TSX tree is kebab-case; no PascalCase `.ts`/`.tsx` filenames
+- Rust sources use snake_case module files
 
 ---
-id: screenpipe-import-relative
+id: screenpipe-import-alias
 trigger: "when importing modules"
-confidence: 0.75
+confidence: 0.9
 domain: code-style
-source: repo-analysis
+source: apps/screenpipe-app-tauri/tsconfig.json
 source_repo: https://github.com/reevesc88/screenpipe
 ---
 
-# Screenpipe Import Relative
+# Screenpipe Import Alias
 
 ## Action
 
-Use relative imports for project files
+In the Tauri app, import project files with `@/` and `@ee/*` (`import { cn } from "@/lib/utils"`). Do not introduce relative PascalCase paths. Packages without those `paths` entries keep the relative imports already used there.
 
 ## Evidence
 
-- Import analysis shows relative import pattern
-- Example: import { x } from '../lib/x'
+- `apps/screenpipe-app-tauri/tsconfig.json` maps `@/*` to `./*` and `@ee/*` to `../../ee/desktop/*`
+- App imports are mostly `@/`; `@ee/` is used for enterprise desktop modules
 
 ---
-id: screenpipe-export-style
-trigger: "when exporting from a module"
-confidence: 0.7
-domain: code-style
-source: repo-analysis
+id: screenpipe-toolchain
+trigger: "when installing packages or running tests"
+confidence: 0.95
+domain: tooling
+source: CLAUDE.md
 source_repo: https://github.com/reevesc88/screenpipe
 ---
 
-# Screenpipe Export Style
+# Screenpipe Toolchain
 
 ## Action
 
-Prefer named exports
+Use `cargo` for Rust and `bun` for JS/TS. Do not use npm or pnpm. Add the screenpipe source header from CLAUDE.md to every source file you create or edit.
 
 ## Evidence
 
-- Export pattern analysis
-- Dominant style: named
+- CLAUDE.md package manager and file-header rules
+- Workspace `Cargo.toml` plus `apps/screenpipe-app-tauri` bun scripts
 
 ---
-id: screenpipe-test-separate
+id: screenpipe-test-placement
 trigger: "when writing tests"
-confidence: 0.8
+confidence: 0.9
 domain: testing
-source: repo-analysis
+source: repo-tree
 source_repo: https://github.com/reevesc88/screenpipe
 ---
 
-# Screenpipe Test Separate
+# Screenpipe Test Placement
 
 ## Action
 
-Place tests in the tests/ or __tests__/ directory, mirroring src structure
+Match the test location already used by the surrounding code. TypeScript tests are colocated `*.test.ts` / `*.test.tsx`, with some existing `__tests__` directories. Rust unit tests are in-file `mod tests`. Rust integration tests live in `crates/<crate>/tests/`. Do not require a separate `tests/` or `__tests__` tree that mirrors `src`. Run `cargo test` or `bun test`.
 
 ## Evidence
 
-- Separate test directory pattern detected
-- Tests live in dedicated test folders
-
+- Colocated `*.test.ts(x)` under the Tauri app
+- `mod tests` inside Rust modules
+- `crates/*/tests/` integration tests

@@ -1,17 +1,14 @@
 # ECC for Codex CLI
 
-This supplements the root `AGENTS.md` with a repo-local ECC baseline.
+Repo-local notes for Codex in this checkout. There is no root `AGENTS.md`.
 
 ## Repo Skill
 
-- Repo-generated Codex skill: `.agents/skills/screenpipe/SKILL.md`
+- Repo skill: `.agents/skills/screenpipe/SKILL.md`
 - Claude-facing companion skill: `.claude/skills/screenpipe/SKILL.md`
-- Keep user-specific credentials and private MCPs in `~/.codex/config.toml`, not in this repo.
-
-## MCP Baseline
-
-Treat `.codex/config.toml` as the default ECC-safe baseline for work in this repository.
-The generated baseline enables GitHub, Context7, Exa, Memory, Playwright, and Sequential Thinking.
+- Implicit invocation for that skill stays off (`allow_implicit_invocation: false`).
+- Keep credentials and MCP servers in `~/.codex/config.toml`, not in this repo.
+- Pin any opt-in MCP package to an exact version in user config. Do not enable Playwright `--extension` or a third-party MCP URL from this repo.
 
 ## Multi-Agent Support
 
@@ -21,6 +18,4 @@ The generated baseline enables GitHub, Context7, Exa, Memory, Playwright, and Se
 
 ## Workflow Files
 
-- No dedicated workflow command files were generated for this repo.
-
-Use these workflow files as reusable task scaffolds when the detected repository workflows recur.
+No dedicated workflow command files were generated for this repo.

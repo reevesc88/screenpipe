@@ -1,6 +1,6 @@
 interface:
   display_name: "Screenpipe"
-  short_description: "Repo-specific patterns and workflows for screenpipe"
-  default_prompt: "Use the screenpipe repo skill to follow existing architecture, testing, and workflow conventions."
+  short_description: "Rust workspace and Tauri app conventions for screenpipe"
+  default_prompt: "Use the screenpipe repo skill for naming, imports, commit subjects, and test placement. Follow CLAUDE.md and CONTRIBUTING.md."
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false
