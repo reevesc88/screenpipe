@@ -1,0 +1,104 @@
+# Instincts aligned to CLAUDE.md, CONTRIBUTING.md, and the current tree.
+# Replaces the 2026-08-31 repo-analysis pass (one commit, PascalCase, relative imports).
+# Version: 2.0
+
+---
+id: screenpipe-commit-message
+trigger: "when writing a commit message"
+confidence: 0.95
+domain: git
+source: CONTRIBUTING.md
+source_repo: https://github.com/reevesc88/screenpipe
+---
+
+# Screenpipe Commit Message
+
+## Action
+
+Write an imperative, present-tense subject of at most 72 characters. Commit text feeds the changelog, so the subject must say what changed. Do not restrict prefixes to `chore`, and do not require `feat:` or `fix:` conventional-commit prefixes.
+
+## Evidence
+
+- CONTRIBUTING.md styleguide: present tense, imperative mood, 72-character first line
+- Changelog is generated from commit history
+
+---
+id: screenpipe-naming-files
+trigger: "when creating a new file"
+confidence: 0.9
+domain: code-style
+source: repo-tree
+source_repo: https://github.com/reevesc88/screenpipe
+---
+
+# Screenpipe Naming Files
+
+## Action
+
+Name TypeScript files in kebab-case (`components/ui/button.tsx`, `license-key-input.tsx`). Name Rust modules in snake_case (`meeting_watcher.rs`). Do not use PascalCase file names.
+
+## Evidence
+
+- TS/TSX tree is kebab-case; no PascalCase `.ts`/`.tsx` filenames
+- Rust sources use snake_case module files
+
+---
+id: screenpipe-import-alias
+trigger: "when importing modules"
+confidence: 0.9
+domain: code-style
+source: apps/screenpipe-app-tauri/tsconfig.json
+source_repo: https://github.com/reevesc88/screenpipe
+---
+
+# Screenpipe Import Alias
+
+## Action
+
+In the Tauri app, import project files with `@/` and `@ee/*` (`import { cn } from "@/lib/utils"`). Do not introduce relative PascalCase paths. Packages without those `paths` entries keep the relative imports already used there.
+
+## Evidence
+
+- `apps/screenpipe-app-tauri/tsconfig.json` maps `@/*` to `./*` and `@ee/*` to `../../ee/desktop/*`
+- App imports are mostly `@/`; `@ee/` is used for enterprise desktop modules
+
+---
+id: screenpipe-toolchain
+trigger: "when installing packages or running tests"
+confidence: 0.95
+domain: tooling
+source: CLAUDE.md
+source_repo: https://github.com/reevesc88/screenpipe
+---
+
+# Screenpipe Toolchain
+
+## Action
+
+Use `cargo` for Rust and `bun` for JS/TS. Do not use npm or pnpm. Add the screenpipe source header from CLAUDE.md to every source file you create or edit.
+
+## Evidence
+
+- CLAUDE.md package manager and file-header rules
+- Workspace `Cargo.toml` plus `apps/screenpipe-app-tauri` bun scripts
+
+---
+id: screenpipe-test-placement
+trigger: "when writing tests"
+confidence: 0.9
+domain: testing
+source: repo-tree
+source_repo: https://github.com/reevesc88/screenpipe
+---
+
+# Screenpipe Test Placement
+
+## Action
+
+Match the test location already used by the surrounding code. TypeScript tests are colocated `*.test.ts` / `*.test.tsx`, with some existing `__tests__` directories. Rust unit tests are in-file `mod tests`. Rust integration tests live in `crates/<crate>/tests/`. Do not require a separate `tests/` or `__tests__` tree that mirrors `src`. Run `cargo test` or `bun test`.
+
+## Evidence
+
+- Colocated `*.test.ts(x)` under the Tauri app
+- `mod tests` inside Rust modules
+- `crates/*/tests/` integration tests
